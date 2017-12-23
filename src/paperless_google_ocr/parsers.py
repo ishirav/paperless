@@ -2,7 +2,6 @@ import itertools
 import os
 import re
 import subprocess
-from google.cloud import vision
 from django.conf import settings
 from documents.parsers import DocumentParser, ParseError
 
@@ -19,23 +18,22 @@ class GoogleOcrDocumentParser(DocumentParser):
 
     CONVERT = settings.CONVERT_BINARY
     DENSITY = settings.CONVERT_DENSITY if settings.CONVERT_DENSITY else 300
-    THREADS = int(settings.OCR_THREADS) if settings.OCR_THREADS else None
-    UNPAPER = settings.UNPAPER_BINARY
-    DEFAULT_OCR_LANGUAGE = settings.OCR_LANGUAGE
+    IMAGE_FORMAT = 'jpg'
 
     def get_thumbnail(self):
         """
         The thumbnail of a PDF is just a 500px wide image of the first page.
         """
 
+        filename = "thumbnail." + self.IMAGE_FORMAT
         run_convert(
             self.CONVERT,
             "-scale", "500x5000",
             "-alpha", "remove",
-            self.document_path + '[0]', os.path.join(self.tempdir, "thumbnail.jpg")
+            self.document_path + '[0]', os.path.join(self.tempdir, filename)
         )
 
-        return os.path.join(self.tempdir, "thumbnail.jpg")
+        return os.path.join(self.tempdir, filename)
 
     def get_text(self):
 
@@ -53,8 +51,7 @@ class GoogleOcrDocumentParser(DocumentParser):
         """
 
         # Convert PDF to multiple images
-        output_format = 'jpg'
-        img = os.path.join(self.tempdir, "convert-%04d." + output_format)
+        img = os.path.join(self.tempdir, "convert-%04d." + self.IMAGE_FORMAT)
         run_convert(
             self.CONVERT,
             "-density", str(self.DENSITY),
@@ -66,7 +63,7 @@ class GoogleOcrDocumentParser(DocumentParser):
         # Get a list of converted images
         imgs = []
         for f in os.listdir(self.tempdir):
-            if f.startswith('convert') and f.endswith(output_format):
+            if f.startswith('convert') and f.endswith(self.IMAGE_FORMAT):
                 imgs.append(os.path.join(self.tempdir, f))
 
         return sorted(filter(lambda __: os.path.isfile(__), imgs))
@@ -76,6 +73,7 @@ class GoogleOcrDocumentParser(DocumentParser):
         Performs OCR on the images.
         """
 
+        from google.cloud import vision
         client = vision.ImageAnnotatorClient()
 
         texts = []
