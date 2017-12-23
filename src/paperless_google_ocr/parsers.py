@@ -66,7 +66,7 @@ class GoogleOcrDocumentParser(DocumentParser):
         # Get a list of converted images
         imgs = []
         for f in os.listdir(self.tempdir):
-            if f.endswith(output_format):
+            if f.startswith('convert') and f.endswith(output_format):
                 imgs.append(os.path.join(self.tempdir, f))
 
         return sorted(filter(lambda __: os.path.isfile(__), imgs))
@@ -85,10 +85,11 @@ class GoogleOcrDocumentParser(DocumentParser):
             with open(img, 'rb') as f:
                 content = f.read()
             if index == 0:
-                # Try to detect a logo on the first page
+                # Try to detect a logos on the first page
                 try:
                     response = client.logo_detection({'content': content})
-                    texts.append('{' + response.logo_annotations[0].description + '}')
+                    for logo in response.logo_annotations:
+                        texts.append('<' + logo.description + '>')
                 except:
                     pass
             else:
