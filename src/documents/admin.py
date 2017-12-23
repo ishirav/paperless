@@ -45,6 +45,15 @@ class CorrespondentAdmin(CommonAdmin):
 
 class TagAdmin(CommonAdmin):
 
+    class Media:
+        css = {
+            "all": ("admin.css",)
+        }
+        js = (
+            "https://code.jquery.com/jquery-1.12.4.min.js",
+            "admin.js",
+        )
+
     list_display = ("name", "colour", "match", "matching_algorithm")
     list_filter = ("colour", "matching_algorithm")
     list_editable = ("colour", "match", "matching_algorithm")
@@ -61,6 +70,7 @@ class DocumentAdmin(CommonAdmin):
     list_display = ("title", "created", "thumbnail", "correspondent", "tags_")
     list_filter = ("tags", "correspondent", MonthListFilter)
     ordering = ["-created", "correspondent"]
+    filter_horizontal = ("tags",)
 
     def has_add_permission(self, request):
         return False
