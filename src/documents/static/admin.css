@@ -9,3 +9,7 @@ td.field-match {
 td.field-match input {
     width: 99%;
 }
+
+#id_match {
+    width: 75%;
+}
