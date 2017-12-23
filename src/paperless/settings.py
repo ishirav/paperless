@@ -48,7 +48,7 @@ if _allowed_hosts:
     ALLOWED_HOSTS = _allowed_hosts.split(",")
 
 FORCE_SCRIPT_NAME = os.getenv("PAPERLESS_FORCE_SCRIPT_NAME")
-    
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -63,7 +63,8 @@ INSTALLED_APPS = [
 
     "documents.apps.DocumentsConfig",
     "reminders.apps.RemindersConfig",
-    "paperless_tesseract.apps.PaperlessTesseractConfig",
+    "paperless_google_ocr.apps.PaperlessGoogleOcrConfig",
+    # "paperless_tesseract.apps.PaperlessTesseractConfig",
 
     "flat_responsive",
     "django.contrib.admin",
