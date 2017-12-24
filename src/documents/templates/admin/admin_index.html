@@ -1,0 +1,51 @@
+{% extends "admin/index.html" %}
+
+{% load static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "dropzone.css" %}" />
+    <script src="{% static "dropzone.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+
+
+    {{ block.super }}
+
+{% endblock %}
+
+{% block sidebar %}
+
+<div id="content-related">
+    <div class="module">
+        <table style="width: 100%;">
+            <caption>Upload Files</caption>
+            <tr>
+                <td style="white-space: normal;">
+                    <form action="/push" class="dropzone" id="dropzoneform"></form>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    Dropzone.options.dropzoneform = {
+        paramName: "document",
+        params: function(files) {
+            // Get the file name
+            name = files[0].name;
+            // Remove file extension
+            var pos = name.lastIndexOf('.');
+            if (pos > 0) {
+                name = name.substr(0, pos);
+            }
+            // Use today's date as correspondent, it will be included in the filename
+            var datestr = (new Date()).toISOString().substr(0,10).replace(/-/g, '') + 'Z';
+            return {title: name, correspondent: datestr}
+        }
+    };
+</script>
+
+{% endblock %}

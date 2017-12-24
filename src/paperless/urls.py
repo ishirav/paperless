@@ -49,3 +49,5 @@ admin.site.site_header = 'Paperless'
 admin.site.site_title = 'Paperless'
 # Text at the top of the admin index page.
 admin.site.index_title = 'Paperless administration'
+# Custom admin index template
+admin.site.index_template = 'admin/admin_index.html'
