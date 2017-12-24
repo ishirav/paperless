@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from documents.models import Document, Tag
+from documents.models import Document, Tag, Correspondent
 
 from ...mixins import Renderable
 
@@ -22,7 +22,9 @@ class Command(Renderable, BaseCommand):
 
         self.verbosity = options["verbosity"]
 
-        for document in Document.objects.all():
+        correspondents = list(Correspondent.objects.all())
+
+        for document in Document.objects.iterator():
 
             tags = Tag.objects.exclude(
                 pk__in=document.tags.values_list("pk", flat=True))
@@ -30,3 +32,11 @@ class Command(Renderable, BaseCommand):
             for tag in Tag.match_all(document.content, tags):
                 print('Tagging {} with "{}"'.format(document, tag))
                 document.tags.add(tag)
+
+            if not document.correspondent:
+                for c in correspondents:
+                    if c.matches(document.content):
+                        print('Correspondent of {} is "{}"'.format(document, c))
+                        document.correspondent = c
+                        document.save()
+
