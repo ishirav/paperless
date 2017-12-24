@@ -6,10 +6,6 @@ from django.conf import settings
 from documents.parsers import DocumentParser, ParseError
 
 
-class OCRError(Exception):
-    pass
-
-
 class GoogleOcrDocumentParser(DocumentParser):
     """
     This parser uses Google Cloud Vision to try and get some text out of a rasterised
@@ -36,13 +32,10 @@ class GoogleOcrDocumentParser(DocumentParser):
         return os.path.join(self.tempdir, filename)
 
     def get_text(self):
-
-        images = self._get_images()
-
         try:
-
+            images = self._get_images()
             return self._ocr(images)
-        except OCRError as e:
+        except Exception as e:
             raise ParseError(e)
 
     def _get_images(self):
