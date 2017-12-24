@@ -2,6 +2,11 @@
     color: #fff;
 }
 
+.field-colour select option {
+    color: #333;
+    background-color: #fff;
+}
+
 td.field-match {
     width: 75%;
 }
