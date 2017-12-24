@@ -48,7 +48,7 @@ if _allowed_hosts:
     ALLOWED_HOSTS = _allowed_hosts.split(",")
 
 FORCE_SCRIPT_NAME = os.getenv("PAPERLESS_FORCE_SCRIPT_NAME")
-    
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "documents.apps.DocumentsConfig",
     "reminders.apps.RemindersConfig",
     "paperless_tesseract.apps.PaperlessTesseractConfig",
+    "paperless_google_ocr.apps.PaperlessGoogleOcrConfig",
 
     "flat_responsive",
     "django.contrib.admin",
@@ -255,3 +256,7 @@ POST_CONSUME_SCRIPT = os.getenv("PAPERLESS_POST_CONSUME_SCRIPT")
 # positive integer, but if you don't define one in paperless.conf, a default of
 # 100 will be used.
 PAPERLESS_LIST_PER_PAGE = int(os.getenv("PAPERLESS_LIST_PER_PAGE", 100))
+
+# Google Cloud Vision API credentials file.
+# The Google OCR parser will be used only if this is set.
+GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")

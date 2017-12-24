@@ -1,0 +1,15 @@
+.field-colour select {
+    color: #fff;
+}
+
+td.field-match {
+    width: 75%;
+}
+
+td.field-match input {
+    width: 99%;
+}
+
+#id_match {
+    width: 75%;
+}
