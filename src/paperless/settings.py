@@ -260,3 +260,8 @@ PAPERLESS_LIST_PER_PAGE = int(os.getenv("PAPERLESS_LIST_PER_PAGE", 100))
 # Google Cloud Vision API credentials file.
 # The Google OCR parser will be used only if this is set.
 GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+
+
+USE_L10N = False
+SHORT_DATE_FORMAT = DATE_FORMAT = 'Y-m-d'
+SHORT_DATETIME_FORMAT = DATETIME_FORMAT = 'Y-m-d H:i'

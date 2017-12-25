@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import url, static, include
 from django.contrib import admin
+from django.views.generic import RedirectView
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.routers import DefaultRouter
@@ -19,6 +20,8 @@ router.register(r"reminders", ReminderViewSet)
 router.register(r"tags", TagViewSet)
 
 urlpatterns = [
+
+    url(r'^$', RedirectView.as_view(url='/admin/')),
 
     # API
     url(
