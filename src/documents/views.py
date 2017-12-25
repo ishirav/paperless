@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.views.generic import DetailView, FormView, TemplateView
 from django_filters.rest_framework import DjangoFilterBackend
 from paperless.db import GnuPG
@@ -27,6 +27,14 @@ from .serialisers import (
     LogSerializer,
     TagSerializer
 )
+
+
+def retag_view(request):
+    from django.core.management import call_command
+    from django.contrib import messages
+    call_command('document_retagger')
+    messages.add_message(request, messages.INFO, 'Finished re-tagging documents.')
+    return HttpResponseRedirect('/admin/')
 
 
 class IndexView(TemplateView):

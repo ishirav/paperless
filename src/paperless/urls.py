@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.routers import DefaultRouter
 
 from documents.views import (
-    FetchView, PushView,
+    FetchView, PushView, retag_view,
     CorrespondentViewSet, TagViewSet, DocumentViewSet, LogViewSet
 )
 from reminders.views import ReminderViewSet
@@ -38,8 +38,8 @@ urlpatterns = [
     url(r"^push$", csrf_exempt(PushView.as_view()), name="push"),
 
     # The Django admin
+    url(r"admin/retag/", retag_view, name="retag"),
     url(r"admin/", admin.site.urls),
-    url(r"", admin.site.urls),  # This is going away
 
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
