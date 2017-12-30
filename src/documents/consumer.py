@@ -68,6 +68,7 @@ class Consumer(object):
                 "This is a problem."
             )
 
+
     def log(self, level, message):
         getattr(self.logger, level)(message, extra={
             "group": self.logging_group
@@ -185,6 +186,8 @@ class Consumer(object):
         created = file_info.created or timezone.make_aware(
                     datetime.datetime.fromtimestamp(stats.st_mtime))
 
+        dated = self._extract_date(text)
+
         with open(doc, "rb") as f:
             document = Document.objects.create(
                 correspondent=file_info.correspondent,
@@ -193,7 +196,8 @@ class Consumer(object):
                 file_type=file_info.extension,
                 checksum=hashlib.md5(f.read()).hexdigest(),
                 created=created,
-                modified=created
+                modified=created,
+                dated=dated
             )
 
         relevant_tags = set(list(Tag.match_all(text)) + list(file_info.tags))
@@ -217,6 +221,15 @@ class Consumer(object):
         self.log("info", "Completed")
 
         return document
+
+    def _extract_date(self, text):
+        from date_detector import Parser
+        max_date = datetime.date.today()
+        min_date = max_date - datetime.timedelta(days=3650)
+        p = Parser(dictionaries=('en', 'he'), min_date=min_date, max_date=max_date)
+        for match in p.parse(text[:2000]):
+            return match.date
+        return None
 
     def _cleanup_doc(self, doc):
         self.log("debug", "Deleting document {}".format(doc))
