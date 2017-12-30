@@ -67,17 +67,13 @@ class DocumentAdmin(CommonAdmin):
         }
 
     search_fields = ("correspondent__name", "title", "content")
-    list_display = ("title", "created", "thumbnail", "correspondent", "tags_")
+    list_display = ("title", "dated", "created", "thumbnail", "correspondent", "tags_")
     list_filter = ("tags", "correspondent", MonthListFilter)
     ordering = ["-created", "correspondent"]
     filter_horizontal = ("tags",)
 
     def has_add_permission(self, request):
         return False
-
-    def created_(self, obj):
-        return obj.created.date().strftime("%Y-%m-%d")
-    created_.short_description = "Created"
 
     def thumbnail(self, obj):
         if settings.FORCE_SCRIPT_NAME:

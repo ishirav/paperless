@@ -224,6 +224,7 @@ class Document(models.Model):
         default=timezone.now, db_index=True)
     modified = models.DateTimeField(
         auto_now=True, editable=False, db_index=True)
+    dated = models.DateField(blank=True, null=True)
 
     class Meta(object):
         ordering = ("correspondent", "title")
