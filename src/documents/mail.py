@@ -10,6 +10,7 @@ from base64 import b64decode
 from email import policy
 from email.parser import BytesParser
 from dateutil import parser
+import filetype
 
 from django.conf import settings
 
@@ -135,8 +136,8 @@ class Attachment(object):
 
     def __init__(self, data, content_type):
 
-        self.content_type = content_type
         self.data = data
+        self.content_type = self._detect_content_type(content_type)
         self.suffix = None
 
         m = self.SAFE_SUFFIX_REGEX.match(self.content_type)
@@ -147,6 +148,14 @@ class Attachment(object):
 
     def read(self):
         return self.data
+
+    def _detect_content_type(self, content_type):
+        if content_type == 'application/octet-stream':
+            # Too general, try to detect
+            detected = filetype.guess_mime(self.data)
+            if detected:
+                return detected
+        return content_type
 
 
 class MailFetcher(Loggable):
